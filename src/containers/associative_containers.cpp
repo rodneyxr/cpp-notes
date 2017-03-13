@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <set>
+#include <map>
 
 /**
  * Example: set (no duplicates)
@@ -49,13 +50,73 @@ void multiset_example() {
     std::multiset<int> ms;
     ms.insert(1);
     ms.insert(1);
-    // {1, 2}
+    for (auto v : ms)
+        std::cout << v << std::endl;
+    // {1, 1}
 
     // *it = 10; NOT ALLOWED, read-only
 }
 
+/**
+ * Example: map (key/value pairs, no duplicated keys, sorted by key)
+ *
+ * http://www.cplusplus.com/reference/map/map/
+ */
+void map_example() {
+    std::map<std::string, int> m;
+    m.insert(std::pair<std::string, int>("User0", 0));
+    m.insert(std::make_pair("User1", 5));
+
+    std::map<std::string, int>::iterator it = m.end();
+    m.insert(it, std::make_pair("User2", 10)); // 'it' is a hint
+
+    for (std::pair<std::string, int> p : m) {
+        std::cout << "{" << p.first << ":" << p.second << "} ";
+    } // Print out: {User0:0} {User1:5} {User2:10}
+
+    it = m.find("User1"); // O(log(n))
+    std::cout << (*it).second << std::endl; // prints out 5
+
+    // remove "User1"
+    m.erase(it);
+    for (auto p : m)
+        std::cout << p.first << std::endl;
+}
+
+/**
+ * Example: multimap (key/values pairs, duplicated keys allowed, key is const)
+ *
+ * http://www.cplusplus.com/reference/map/multimap/
+ */
+void multimap_example() {
+    std::multimap<char, int> mm;
+    mm.insert(std::make_pair('a', 1));
+    mm.insert(std::make_pair('b', 99));
+    mm.insert(std::make_pair('a', 0));
+
+    for (auto p : mm)
+        std::cout << p.first << " => " << p.second << std::endl;
+    // a => 1
+    // a => 0
+    // b => 99
+    // NOTE: values are not sorted
+
+    auto it = mm.find('a');
+    std::cout << (*it).first << " => " << (*it).second << std::endl;
+    // a => 1
+}
+
 int main() {
+    printf("\n---------- Example: set ----------\n");
     set_example();
+
+    printf("\n---------- Example: multiset ----------\n");
     multiset_example();
+
+    printf("\n---------- Example: map ----------\n");
+    map_example();
+
+    printf("\n---------- Example: multimap ----------\n");
+    multimap_example();
     return 0;
 }
